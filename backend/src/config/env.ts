@@ -3,11 +3,8 @@ import { z } from 'zod';
 import path from 'path';
 
 // Load env variables
-dotenv.config();
-// Also load from parent directory if needed, but loading from current is fine.
-// Under development, dot env can also look at backend/src/.env or root.
-// We config dotenv.config({ path: path.resolve(process.cwd(), '.env') });
-dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+const envPath = path.resolve(process.cwd(), '.env');
+dotenv.config({ path: envPath, override: true });
 
 const envSchema = z.object({
   PORT: z.string().transform((val) => parseInt(val, 10)).default('3000'),
