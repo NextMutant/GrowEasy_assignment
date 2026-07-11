@@ -8,41 +8,20 @@
   ],
   "routes": [
     {
-      "src": "/.*",
-      "methods": ["OPTIONS"],
-      "headers": {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization"
-      }
-    },
-    {
       "src": "/health",
-      "dest": "/api",
-      "headers": {
-        "Access-Control-Allow-Origin": "*"
-      }
+      "dest": "/api/index.ts"
     },
     {
       "src": "/upload",
-      "dest": "/api",
-      "headers": {
-        "Access-Control-Allow-Origin": "*"
-      }
+      "dest": "/api/index.ts"
     },
     {
       "src": "/map-batch",
-      "dest": "/api",
-      "headers": {
-        "Access-Control-Allow-Origin": "*"
-      }
+      "dest": "/api/index.ts"
     },
     {
       "src": "/(.*)",
-      "dest": "/api",
-      "headers": {
-        "Access-Control-Allow-Origin": "*"
-      }
+      "dest": "/api/index.ts"
     }
   ]
 }
