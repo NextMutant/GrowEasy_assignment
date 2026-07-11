@@ -1,6 +1,8 @@
 import { ImportResult } from './types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+// Clean up trailing slashes in API_URL if present
+const rawApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const API_URL = rawApiUrl.replace(/\/+$/, '');
 
 export interface ApiResponse<T> {
   success: boolean;
