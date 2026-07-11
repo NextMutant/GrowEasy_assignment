@@ -75,7 +75,7 @@ export const mapBatchWithAI = async (
           'Authorization': `Bearer ${env.GROQ_API_KEY}`,
         },
         body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
+          model: env.GROQ_MODEL,
           messages: [
             {
               role: 'user',

@@ -10,6 +10,7 @@ const envSchema = z.object({
   PORT: z.string().transform((val) => parseInt(val, 10)).default('3000'),
   CORS_ORIGIN: z.string().default('*'),
   GROQ_API_KEY: z.string({ required_error: 'GROQ_API_KEY is required' }),
+  GROQ_MODEL: z.string().default('llama-3.3-70b-versatile'),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 });
 
