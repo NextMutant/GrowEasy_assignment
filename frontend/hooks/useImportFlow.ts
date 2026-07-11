@@ -6,7 +6,10 @@ import { ImportResult } from '../lib/types';
 export type ImportFlowState = 'idle' | 'previewing' | 'processing' | 'done' | 'error';
 export type ProcessingProgressStep = 'uploading' | 'parsing' | 'mapping_ai' | 'finishing';
 
-export const useImportFlow = () => {
+export const useImportFlow = (options?: {
+  onError?: (msg: string) => void;
+  onSuccess?: (result: ImportResult) => void;
+}) => {
   const [state, setState] = useState<ImportFlowState>('idle');
   const [file, setFile] = useState<File | null>(null);
   const [clientData, setClientData] = useState<ClientParsedData | null>(null);
@@ -25,8 +28,10 @@ export const useImportFlow = () => {
   const handleSelectFile = async (selectedFile: File) => {
     setErrorMsg(null);
     if (!selectedFile.name.toLowerCase().endsWith('.csv')) {
-      setErrorMsg('Invalid file format. Only CSV files are accepted.');
+      const msg = 'Invalid file format. Only CSV files are accepted.';
+      setErrorMsg(msg);
       setState('error');
+      options?.onError?.(msg);
       return;
     }
 
@@ -36,9 +41,12 @@ export const useImportFlow = () => {
       
       const parsed = await parseCsvOnClient(selectedFile);
       setClientData(parsed);
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Failed to parse file on client side.');
+    } catch (err) {
+      const error = err as Error;
+      const msg = error.message || 'Failed to parse file on client side.';
+      setErrorMsg(msg);
       setState('error');
+      options?.onError?.(msg);
     }
   };
 
@@ -66,17 +74,21 @@ export const useImportFlow = () => {
       const tFinish = setTimeout(() => {
         setImportResult(result);
         setState('done');
+        options?.onSuccess?.(result);
       }, 9500); // 1.5s after finishing starts
       
       timerRefs.current.push(tFinish);
-    } catch (err: any) {
-      if (err.name === 'AbortError') {
+    } catch (err) {
+      const error = err as Error;
+      if (error.name === 'AbortError') {
         loggerInfo('Import aborted by user.');
         return;
       }
       clearTimers();
-      setErrorMsg(err.message || 'An unexpected error occurred during processing.');
+      const msg = error.message || 'An unexpected error occurred during processing.';
+      setErrorMsg(msg);
       setState('error');
+      options?.onError?.(msg);
     }
   };
 

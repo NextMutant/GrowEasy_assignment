@@ -100,7 +100,9 @@ groweasy-csv-importer/
     cp .env.example .env
     ```
 4.  Configure your environment variables in `.env`:
-    *   `GEMINI_API_KEY`: Your Google Gemini API Key.
+    *   `AI_PROVIDER`: Set to `groq` or `gemini` (default: `groq`).
+    *   `GROQ_API_KEY`: Your Groq API Key (required if provider is `groq`).
+    *   `GEMINI_API_KEY`: Your Google Gemini API Key (required if provider is `gemini`).
     *   `PORT`: 3000
     *   `CORS_ORIGIN`: http://localhost:3000 (or your client app URL)
 

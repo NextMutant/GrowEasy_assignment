@@ -9,7 +9,7 @@ export interface ApiResponse<T> {
   error?: {
     message: string;
     status: number;
-    details?: any;
+    details?: unknown;
   };
 }
 
@@ -52,7 +52,7 @@ export const checkHealth = async (): Promise<boolean> => {
     const response = await fetch(`${API_URL}/health`);
     const json = await response.json();
     return response.ok && json.success;
-  } catch (error) {
+  } catch {
     return false;
   }
 };

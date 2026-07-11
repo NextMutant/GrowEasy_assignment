@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Eye, ChevronLeft, ChevronRight, AlertTriangle, Check, ShieldAlert } from 'lucide-react';
-import { ImportResult, CrmRecord, SkippedRecord, CrmStatus } from '../lib/types';
+import { ImportResult, CrmStatus } from '../lib/types';
 
 interface ResultsTableProps {
   result: ImportResult;

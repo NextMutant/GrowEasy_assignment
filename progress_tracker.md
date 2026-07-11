@@ -43,3 +43,4 @@ The AI mapping requests fail with the following API gateway error:
 *   **How to Resolve**:
     1.  **Pay-As-You-Go Billing (Recommended)**: Set up a billing account on your project in [Google AI Studio](https://aistudio.google.com/) under **Settings** -> **Billing** to transition from the Free Tier to the paid tier (which is supported globally and costs less than a fraction of a cent for these tests).
     2.  **VPN Routing**: Connect to a VPN and route your local traffic through a country where the Free Tier is supported (like the **United States** or **India**), then restart the backend server.
+    3.  **Alternative AI Provider (Groq)**: Set `AI_PROVIDER=groq` and provide a `GROQ_API_KEY` in `backend/.env` to run mapping jobs via Llama 3 on Groq's high-speed free tier.

@@ -54,6 +54,9 @@ export const processImport = async (fileBuffer: Buffer): Promise<ImportResult> =
   }
 
   logger.info(`Starting Import Flow: Total raw rows: ${rawRows.length}. Number of batches: ${batches.length}`);
+  if (rawRows.length > 0) {
+    logger.info(`CSV Headers: ${Object.keys(rawRows[0]).join(', ')}`);
+  }
 
   // We process batches with concurrency control using a worker pool
   let nextBatchIndex = 0;

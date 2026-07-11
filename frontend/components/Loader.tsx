@@ -70,7 +70,7 @@ export const Loader: React.FC<LoaderProps> = ({
             <h2 className="text-xl font-bold text-gray-800 tracking-tight">Processing</h2>
           </div>
           <p className="text-sm text-gray-500 leading-relaxed mb-4">
-            Please don't close this window. Our AI is analyzing and mapping the fields. We'll notify you when it's done.
+            {"Please don't close this window. Our AI is analyzing and mapping the fields. We'll notify you when it's done."}
           </p>
           <div className="p-3.5 bg-gray-50 border border-gray-100 rounded-lg text-xs text-gray-600">
             <span className="font-semibold text-gray-700">File:</span> {fileName}

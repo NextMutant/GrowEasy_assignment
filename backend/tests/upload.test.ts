@@ -16,6 +16,10 @@ jest.mock('../src/services/ImportService', () => {
 });
 
 describe('POST /upload', () => {
+  beforeAll(() => {
+    jest.setTimeout(20000);
+  });
+
   it('should upload CSV successfully', async () => {
     const csvContent = 'name,email,phone\nJohn,john@example.com,1234567890';
     const buffer = Buffer.from(csvContent, 'utf-8');

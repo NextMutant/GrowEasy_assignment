@@ -1,7 +1,7 @@
 'use intelligence'; // just normal code
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { HelpCircle, Sparkles, FileSpreadsheet, RefreshCw } from 'lucide-react';
 import { useImportFlow } from '../hooks/useImportFlow';
 import Navbar from '../components/Navbar';
@@ -20,33 +20,21 @@ export default function Home() {
     clientData,
     importResult,
     progressStep,
-    errorMsg,
     handleSelectFile,
     handleConfirmImport,
     handleCancel,
     handleRemoveFile,
     handleReset,
-  } = useImportFlow();
+  } = useImportFlow({
+    onError: (msg) => setToast({ message: msg, type: 'error' }),
+    onSuccess: (result) => setToast({
+      message: `Successfully imported ${result.totalImported} leads. ${result.totalSkipped} skipped.`,
+      type: 'success',
+    }),
+  });
 
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
-
-  // Synchronize toast messages with errors from flow hook
-  useEffect(() => {
-    if (errorMsg) {
-      setToast({ message: errorMsg, type: 'error' });
-    }
-  }, [errorMsg]);
-
-  // Synchronize toast success message when done
-  useEffect(() => {
-    if (state === 'done' && importResult) {
-      setToast({
-        message: `Successfully imported ${importResult.totalImported} leads. ${importResult.totalSkipped} skipped.`,
-        type: 'success',
-      });
-    }
-  }, [state, importResult]);
 
   const getStepNumber = (): number => {
     switch (state) {
