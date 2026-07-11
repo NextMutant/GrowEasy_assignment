@@ -91,6 +91,34 @@ export const mapBatchWithAI = async (
 
       if (!response.ok) {
         const errText = await response.text();
+        if (response.status === 429) {
+          const resetTokens = response.headers.get('x-ratelimit-reset-tokens') || response.headers.get('retry-after');
+          let secondsToWait = 10; // Default fallback delay
+          if (resetTokens) {
+            const match = resetTokens.match(/([\d.]+)/);
+            if (match) {
+              secondsToWait = Math.ceil(parseFloat(match[1]));
+            }
+          } else {
+            try {
+              const errJson = JSON.parse(errText);
+              const message = errJson.error?.message || '';
+              const match = message.match(/try again in ([\d.]+s|[\d.]+ seconds|[\d.]+)/i);
+              if (match) {
+                const numMatch = match[1].match(/([\d.]+)/);
+                if (numMatch) {
+                  secondsToWait = Math.ceil(parseFloat(numMatch[1]));
+                }
+              }
+            } catch (e) {
+              // ignore json parsing error
+            }
+          }
+          const rateLimitErr = new Error(`Rate limit exceeded. Wait ${secondsToWait}s`);
+          (rateLimitErr as any).status = 429;
+          (rateLimitErr as any).waitTimeMs = secondsToWait * 1000;
+          throw rateLimitErr;
+        }
         throw new Error(`Groq API returned status ${response.status}: ${errText}`);
       }
 
@@ -124,9 +152,18 @@ export const mapBatchWithAI = async (
         throw error;
       }
       
-      logger.info(`Waiting ${waitTime}ms before retrying batch ${batchIndex + 1}...`);
-      await delay(waitTime);
-      waitTime *= 2; // exponential backoff
+      let waitTimeForThisAttempt = waitTime;
+      if (error.status === 429 && error.waitTimeMs) {
+        waitTimeForThisAttempt = error.waitTimeMs + 1000; // Add 1 second buffer
+        logger.warn(`Rate limit hit (429). Waiting ${waitTimeForThisAttempt / 1000}s before retrying...`);
+      } else {
+        logger.info(`Waiting ${waitTime / 1000}s before retrying batch ${batchIndex + 1}...`);
+      }
+      
+      await delay(waitTimeForThisAttempt);
+      if (error.status !== 429) {
+        waitTime *= 2; // only double backoff for non-429 errors
+      }
     }
   }
 

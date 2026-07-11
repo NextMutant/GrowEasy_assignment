@@ -5,7 +5,7 @@ import { ImportResult, CrmRecord, SkippedRecord } from '../../shared/types';
 import logger from '../utils/logger';
 
 const BATCH_SIZE = 20;
-const CONCURRENCY_LIMIT = 3;
+const CONCURRENCY_LIMIT = 1;
 
 interface ValidationResult {
   valid: boolean;
