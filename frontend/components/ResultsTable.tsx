@@ -217,7 +217,7 @@ export const ResultsTable: React.FC<ResultsTableProps> = ({ result }) => {
                       {isSkipped ? (
                         <span className="text-red-500 dark:text-red-400 font-semibold flex items-center space-x-1">
                           <ShieldAlert className="h-3.5 w-3.5 mr-1 flex-shrink-0 text-red-500 dark:text-red-450" />
-                          <span className="truncate">{item.reason}</span>
+                          <span className="truncate" title={item.reason}>{item.reason}</span>
                         </span>
                       ) : (
                         <span className="text-zinc-500 dark:text-zinc-450 truncate block">{item.crm_note}</span>
