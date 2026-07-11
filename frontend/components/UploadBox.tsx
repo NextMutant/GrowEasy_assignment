@@ -62,10 +62,10 @@ export const UploadBox: React.FC<UploadBoxProps> = ({
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={triggerFileInput}
-          className={`border-2 border-dashed rounded-xl p-10 flex flex-col items-center justify-center cursor-pointer transition-colors duration-200 ${
+          className={`border border-dashed rounded-xl p-12 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 ${
             isDragOver
-              ? 'border-blue-500 bg-blue-50/50'
-              : 'border-blue-200 bg-blue-50/20 hover:bg-blue-50/40 hover:border-blue-400'
+              ? 'border-zinc-800 dark:border-zinc-300 bg-zinc-50 dark:bg-zinc-900/40'
+              : 'border-zinc-200 dark:border-zinc-800 bg-zinc-50/30 dark:bg-zinc-900/10 hover:bg-zinc-50/70 dark:hover:bg-zinc-900/20 hover:border-zinc-400 dark:hover:border-zinc-700'
           }`}
         >
           <input
@@ -76,14 +76,14 @@ export const UploadBox: React.FC<UploadBoxProps> = ({
             className="hidden"
           />
           
-          <div className="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center mb-4 text-blue-600 border border-blue-100">
-            <UploadCloud className="h-6 w-6" />
+          <div className="h-10 w-10 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 flex items-center justify-center mb-4 text-zinc-600 dark:text-zinc-400 border border-border">
+            <UploadCloud className="h-5 w-5" />
           </div>
 
-          <h3 className="text-base font-semibold text-gray-800 mb-1">
+          <h3 className="text-sm font-bold text-zinc-850 dark:text-zinc-200 mb-1">
             Drag and drop your CSV file here
           </h3>
-          <p className="text-sm text-gray-500 mb-4">or</p>
+          <p className="text-xs text-zinc-400 dark:text-zinc-500 mb-4">or</p>
           
           <Button
             type="button"
@@ -92,27 +92,27 @@ export const UploadBox: React.FC<UploadBoxProps> = ({
               e.stopPropagation();
               triggerFileInput();
             }}
-            className="mb-4"
+            className="mb-4 shadow-sm active:scale-[0.98] transition-transform duration-100"
           >
             Choose File
           </Button>
 
-          <span className="text-xs text-gray-400 text-center leading-normal">
-            CSV only • Max 25MB • Nothing is imported until you confirm
+          <span className="text-[10px] text-zinc-400 dark:text-zinc-500 text-center leading-normal">
+            CSV only • Max 25MB • Local client-side parsing
           </span>
         </div>
       ) : (
         /* File Selected State */
-        <div className="border border-gray-200 rounded-xl p-4 bg-white shadow-sm flex items-center justify-between">
+        <div className="border border-border rounded-xl p-4 bg-card-bg shadow-none flex items-center justify-between transition-colors duration-200">
           <div className="flex items-center space-x-4">
-            <div className="h-12 w-12 rounded-lg bg-green-50 text-green-600 flex items-center justify-center border border-green-100">
-              <FileSpreadsheet className="h-6 w-6" />
+            <div className="h-10 w-10 rounded bg-green-50 dark:bg-green-950/20 text-green-600 dark:text-green-400 flex items-center justify-center border border-green-100/50 dark:border-green-900/30">
+              <FileSpreadsheet className="h-5 w-5" />
             </div>
             <div>
-              <h4 className="text-sm font-semibold text-gray-800 truncate max-w-md">
+              <h4 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 truncate max-w-md">
                 {file.name}
               </h4>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <p className="text-[11px] text-zinc-500 dark:text-zinc-450 mt-0.5 font-mono">
                 {formatSize(file.size)} • Ready to preview
               </p>
             </div>
@@ -122,7 +122,7 @@ export const UploadBox: React.FC<UploadBoxProps> = ({
             type="button"
             variant="ghost"
             onClick={onRemoveFile}
-            className="text-red-500 hover:bg-red-50 hover:text-red-700 p-2"
+            className="text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 hover:text-red-700 dark:hover:text-red-300 p-2 cursor-pointer"
           >
             <Trash2 className="h-5 w-5" />
           </Button>

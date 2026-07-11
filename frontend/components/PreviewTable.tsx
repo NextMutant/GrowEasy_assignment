@@ -45,10 +45,10 @@ export const PreviewTable: React.FC<PreviewTableProps> = ({
         <button
           key={i}
           onClick={() => setCurrentPage(i)}
-          className={`h-8 w-8 text-xs font-semibold rounded-lg border transition-colors ${
+          className={`h-8 w-8 text-xs font-semibold rounded-lg border transition-colors cursor-pointer ${
             currentPage === i
-              ? 'border-blue-600 bg-blue-50 text-blue-600'
-              : 'border-gray-200 bg-white hover:bg-gray-50 text-gray-600'
+              ? 'border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900 font-bold'
+              : 'border-zinc-200 dark:border-zinc-800 bg-card-bg hover:bg-zinc-50 dark:hover:bg-zinc-900/50 text-zinc-600 dark:text-zinc-400'
           }`}
         >
           {i}
@@ -61,7 +61,7 @@ export const PreviewTable: React.FC<PreviewTableProps> = ({
         <button
           onClick={handlePrevPage}
           disabled={currentPage === 1}
-          className="h-8 w-8 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="h-8 w-8 flex items-center justify-center rounded-lg border border-zinc-200 dark:border-zinc-800 bg-card-bg text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
@@ -70,11 +70,11 @@ export const PreviewTable: React.FC<PreviewTableProps> = ({
           <>
             <button
               onClick={() => setCurrentPage(1)}
-              className="h-8 w-8 text-xs font-semibold rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-600"
+              className="h-8 w-8 text-xs font-semibold rounded-lg border border-zinc-200 dark:border-zinc-800 bg-card-bg hover:bg-zinc-50 dark:hover:bg-zinc-900/50 text-zinc-650 dark:text-zinc-400 cursor-pointer"
             >
               1
             </button>
-            {startPage > 2 && <span className="text-gray-400 text-xs px-1">...</span>}
+            {startPage > 2 && <span className="text-zinc-400 dark:text-zinc-600 text-xs px-1">...</span>}
           </>
         )}
 
@@ -82,10 +82,10 @@ export const PreviewTable: React.FC<PreviewTableProps> = ({
 
         {endPage < totalPages && (
           <>
-            {endPage < totalPages - 1 && <span className="text-gray-400 text-xs px-1">...</span>}
+            {endPage < totalPages - 1 && <span className="text-zinc-400 dark:text-zinc-600 text-xs px-1">...</span>}
             <button
               onClick={() => setCurrentPage(totalPages)}
-              className="h-8 w-8 text-xs font-semibold rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-600"
+              className="h-8 w-8 text-xs font-semibold rounded-lg border border-zinc-200 dark:border-zinc-800 bg-card-bg hover:bg-zinc-50 dark:hover:bg-zinc-900/50 text-zinc-650 dark:text-zinc-400 cursor-pointer"
             >
               {totalPages}
             </button>
@@ -95,7 +95,7 @@ export const PreviewTable: React.FC<PreviewTableProps> = ({
         <button
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
-          className="h-8 w-8 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="h-8 w-8 flex items-center justify-center rounded-lg border border-zinc-200 dark:border-zinc-800 bg-card-bg text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           <ChevronRight className="h-4 w-4" />
         </button>
@@ -105,31 +105,31 @@ export const PreviewTable: React.FC<PreviewTableProps> = ({
 
   if (rows.length === 0) {
     return (
-      <div className="p-8 text-center text-gray-500 bg-white border border-gray-100 rounded-xl">
+      <div className="p-8 text-center text-zinc-550 dark:text-zinc-450 bg-card-bg border border-border rounded-xl transition-colors duration-200">
         No preview rows available.
       </div>
     );
   }
 
   return (
-    <div className="w-full flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+    <div className="w-full flex flex-col bg-card-bg border border-border rounded-xl shadow-none overflow-hidden transition-colors duration-200">
       {/* Scrollable Table Area */}
       <div className="overflow-x-auto max-h-[360px] overflow-y-auto">
-        <table className="min-w-full divide-y divide-gray-200 text-left text-xs text-gray-700">
-          <thead className="bg-gray-50 text-gray-600 font-semibold tracking-wide sticky top-0 z-10 shadow-[0_1px_0_0_rgba(229,231,235,1)]">
+        <table className="min-w-full divide-y divide-border text-left text-xs text-zinc-700 dark:text-zinc-300">
+          <thead className="bg-zinc-50/50 dark:bg-zinc-900/60 text-zinc-500 dark:text-zinc-400 font-bold uppercase tracking-wider sticky top-0 z-10 shadow-[0_1px_0_0_var(--border)]">
             <tr>
               {headers.map((header, i) => (
-                <th key={i} className="px-4 py-3 font-semibold whitespace-nowrap bg-gray-50">
+                <th key={i} className="px-4 py-3 text-[10px] whitespace-nowrap bg-zinc-50/50 dark:bg-zinc-900/60">
                   {header}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 bg-white font-normal">
+          <tbody className="divide-y divide-border/60 bg-card-bg font-normal">
             {currentRows.map((row, rowIndex) => (
-              <tr key={rowIndex} className="hover:bg-gray-50/50 transition-colors">
+              <tr key={rowIndex} className="hover:bg-zinc-50/40 dark:hover:bg-zinc-800/20 transition-colors">
                 {headers.map((header, colIndex) => (
-                  <td key={colIndex} className="px-4 py-2.5 max-w-[200px] truncate whitespace-nowrap">
+                  <td key={colIndex} className="px-4 py-3 text-xs max-w-[200px] truncate whitespace-nowrap">
                     {row[header] !== undefined ? row[header] : ''}
                   </td>
                 ))}
@@ -140,12 +140,12 @@ export const PreviewTable: React.FC<PreviewTableProps> = ({
       </div>
 
       {/* Table Footer Controls */}
-      <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-between flex-wrap gap-4">
+      <div className="px-6 py-3.5 bg-zinc-50/30 dark:bg-zinc-900/20 border-t border-border flex items-center justify-between flex-wrap gap-4 transition-colors duration-200">
         {/* Left Side: Counts */}
-        <span className="text-xs text-gray-500 font-medium">
-          Showing <span className="font-semibold text-gray-700">{rows.length > 0 ? startIndex + 1 : 0}</span>–
-          <span className="font-semibold text-gray-700">{endIndex}</span> of{' '}
-          <span className="font-semibold text-gray-700">{rows.length}</span> rows
+        <span className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">
+          Showing <span className="font-semibold text-zinc-800 dark:text-zinc-200">{rows.length > 0 ? startIndex + 1 : 0}</span>–
+          <span className="font-semibold text-zinc-800 dark:text-zinc-200">{endIndex}</span> of{' '}
+          <span className="font-semibold text-zinc-800 dark:text-zinc-200">{rows.length}</span> rows
         </span>
 
         {/* Center: Pagination */}
@@ -155,7 +155,7 @@ export const PreviewTable: React.FC<PreviewTableProps> = ({
         <Button
           type="button"
           onClick={onConfirm}
-          className="shadow-sm shadow-blue-100 flex items-center space-x-1.5"
+          className="shadow-sm shadow-blue-100 dark:shadow-none flex items-center space-x-1.5"
         >
           <span>Confirm Import</span>
           <ArrowRight className="h-4 w-4" />

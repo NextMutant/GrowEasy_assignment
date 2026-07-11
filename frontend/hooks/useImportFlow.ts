@@ -114,6 +114,14 @@ export const useImportFlow = (options?: {
     handleRemoveFile();
   };
 
+  const handleLoadHistoryResult = (result: any, fileName: string) => {
+    clearTimers();
+    setFile({ name: fileName } as File);
+    setImportResult(result);
+    setClientData(null);
+    setState('done');
+  };
+
   return {
     state,
     file,
@@ -126,6 +134,7 @@ export const useImportFlow = (options?: {
     handleCancel,
     handleRemoveFile,
     handleReset,
+    handleLoadHistoryResult,
   };
 };
 

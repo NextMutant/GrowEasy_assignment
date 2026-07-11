@@ -56,30 +56,28 @@ export const Loader: React.FC<LoaderProps> = ({
     } else {
       return 'pending';
     }
-  };
-
-  return (
-    <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8 bg-white border border-gray-200 rounded-xl p-8 shadow-sm">
+  };  return (
+    <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8 bg-card-bg border border-border rounded-xl p-8 shadow-none transition-colors duration-200 relative z-10">
       {/* Left Metadata Panel */}
-      <div className="md:col-span-1 border-r border-gray-100 pr-6 flex flex-col justify-between">
+      <div className="md:col-span-1 border-r border-border pr-6 flex flex-col justify-between">
         <div>
           <div className="flex items-center space-x-3 mb-4">
-            <span className="h-7 w-7 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
+            <span className="h-6 w-6 rounded-full bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 flex items-center justify-center font-bold text-xs">
               3
             </span>
-            <h2 className="text-xl font-bold text-gray-800 tracking-tight">Processing</h2>
+            <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">Processing</h2>
           </div>
-          <p className="text-sm text-gray-500 leading-relaxed mb-4">
+          <p className="text-sm text-zinc-550 dark:text-zinc-400 leading-relaxed mb-4">
             {"Please don't close this window. Our AI is analyzing and mapping the fields. We'll notify you when it's done."}
           </p>
-          <div className="p-3.5 bg-gray-50 border border-gray-100 rounded-lg text-xs text-gray-600">
-            <span className="font-semibold text-gray-700">File:</span> {fileName}
+          <div className="p-3.5 bg-background border border-border rounded-lg text-xs text-zinc-600 dark:text-zinc-400">
+            <span className="font-semibold text-zinc-700 dark:text-zinc-300">File:</span> {fileName}
           </div>
         </div>
         
         <button
           onClick={onCancel}
-          className="mt-6 md:mt-0 text-left text-xs font-semibold text-red-500 hover:text-red-700 transition-colors uppercase tracking-wider"
+          className="mt-6 md:mt-0 text-left text-xs font-semibold text-red-500 hover:text-red-700 transition-colors uppercase tracking-wider cursor-pointer"
         >
           Cancel Processing
         </button>
@@ -88,7 +86,7 @@ export const Loader: React.FC<LoaderProps> = ({
       {/* Right Progress steps list & Grid Visualization */}
       <div className="md:col-span-2 space-y-8 flex flex-col justify-between pl-0 md:pl-4">
         {/* Stepper details */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {steps.map((step) => {
             const state = getStepState(step.id);
             
@@ -97,32 +95,32 @@ export const Loader: React.FC<LoaderProps> = ({
                 <div className="flex items-center space-x-4">
                   {/* Circle Indicator */}
                   {state === 'completed' && (
-                    <div className="h-6 w-6 rounded-full bg-green-500 text-white flex items-center justify-center border border-green-400">
-                      <Check className="h-3.5 w-3.5" />
+                    <div className="h-5.5 w-5.5 rounded-full bg-green-500 text-white flex items-center justify-center border border-green-400">
+                      <Check className="h-3 w-3" />
                     </div>
                   )}
                   {state === 'active' && (
-                    <div className="h-6 w-6 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-400">
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    <div className="h-5.5 w-5.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 flex items-center justify-center border border-zinc-300 dark:border-zinc-700">
+                      <Loader2 className="h-3 w-3 animate-spin text-zinc-600 dark:text-zinc-300" />
                     </div>
                   )}
                   {state === 'pending' && (
-                    <div className="h-6 w-6 rounded-full bg-gray-50 text-gray-300 flex items-center justify-center border border-gray-200" />
+                    <div className="h-5.5 w-5.5 rounded-full bg-zinc-50 dark:bg-zinc-900/60 text-zinc-350 dark:text-zinc-650 flex items-center justify-center border border-zinc-200 dark:border-zinc-850" />
                   )}
 
                   {/* Title & Desc */}
                   <div>
-                    <h4 className={`text-sm font-semibold ${state === 'pending' ? 'text-gray-400' : 'text-gray-800'}`}>
+                    <h4 className={`text-xs font-bold ${state === 'pending' ? 'text-zinc-400 dark:text-zinc-600' : 'text-zinc-800 dark:text-zinc-200'}`}>
                       {step.title}
                     </h4>
-                    <p className={`text-xs mt-0.5 ${state === 'pending' ? 'text-gray-300' : 'text-gray-500'}`}>
+                    <p className={`text-[11px] mt-0.5 ${state === 'pending' ? 'text-zinc-300 dark:text-zinc-700' : 'text-zinc-500 dark:text-zinc-450'}`}>
                       {state === 'active' && step.id === 'mapping_ai' ? 'AI is mapping fields...' : step.description}
                     </p>
                   </div>
                 </div>
 
                 {/* Duration */}
-                <span className={`text-xs font-mono ${state === 'pending' ? 'text-gray-300' : 'text-gray-400'}`}>
+                <span className={`text-[11px] font-mono ${state === 'pending' ? 'text-zinc-300 dark:text-zinc-600' : 'text-zinc-500 dark:text-zinc-450'}`}>
                   {state === 'completed' ? step.duration : state === 'active' ? 'processing' : '--'}
                 </span>
               </div>
@@ -131,16 +129,16 @@ export const Loader: React.FC<LoaderProps> = ({
         </div>
 
         {/* Visual Matrix animation */}
-        <div className="bg-slate-50 border border-slate-100 rounded-xl p-6 flex flex-col items-center justify-center">
+        <div className="bg-background border border-border rounded-xl p-6 flex flex-col items-center justify-center">
           {/* Animated blocks grid */}
           <div className="grid grid-cols-12 gap-1.5 w-full max-w-sm mb-4">
             {Array.from({ length: 48 }).map((_, i) => (
               <div
                 key={i}
-                className="h-3.5 w-full rounded-sm bg-blue-100/50 relative overflow-hidden"
+                className="h-3.5 w-full rounded-sm bg-zinc-100 dark:bg-zinc-800/40 relative overflow-hidden"
               >
                 <div
-                  className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-600 transform -translate-x-full animate-progress-blocks"
+                  className="absolute inset-0 bg-gradient-to-r from-zinc-700 to-zinc-900 dark:from-zinc-300 dark:to-zinc-100 transform -translate-x-full animate-progress-blocks"
                   style={{
                     animationDelay: `${(i % 12) * 150}ms`,
                     animationDuration: '1.8s',
@@ -150,8 +148,8 @@ export const Loader: React.FC<LoaderProps> = ({
             ))}
           </div>
 
-          <span className="text-xs text-blue-600 font-semibold uppercase tracking-wider animate-pulse flex items-center">
-            <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin text-blue-500" />
+          <span className="text-xs text-zinc-700 dark:text-zinc-300 font-semibold uppercase tracking-wider animate-pulse flex items-center">
+            <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin text-zinc-500 dark:text-zinc-400" />
             AI is reading and understanding your data...
           </span>
         </div>

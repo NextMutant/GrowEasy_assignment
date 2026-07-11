@@ -1,0 +1,5 @@
+Full Name,Email Address,Phone Number,Organization,City Location,Status,Source
+Alice Smith,alice@example.com,+1 555-0199,Google,New York,GOOD_LEAD_FOLLOW_UP,leads_on_demand
+Bob Jones,bob@example.com,+91 98765 43210,Microsoft,Bangalore,SALE_DONE,meridian_tower
+Charlie Brown,charlie@example.com,,Apple,San Francisco,DID_NOT_CONNECT,eden_park
+Invalid Lead,,12345,Invalid Co,Invalid City,BAD_LEAD,varah_swamy
