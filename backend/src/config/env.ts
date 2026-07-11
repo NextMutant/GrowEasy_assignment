@@ -9,20 +9,8 @@ dotenv.config({ path: envPath });
 const envSchema = z.object({
   PORT: z.string().transform((val) => parseInt(val, 10)).default('3000'),
   CORS_ORIGIN: z.string().default('*'),
-  AI_PROVIDER: z.enum(['gemini', 'groq', 'local']).default('local'),
-  GEMINI_API_KEY: z.string().optional(),
-  GROQ_API_KEY: z.string().optional(),
+  GROQ_API_KEY: z.string({ required_error: 'GROQ_API_KEY is required' }),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
-}).refine((data) => {
-  if (data.AI_PROVIDER === 'gemini' && !data.GEMINI_API_KEY) {
-    return false;
-  }
-  if (data.AI_PROVIDER === 'groq' && !data.GROQ_API_KEY) {
-    return false;
-  }
-  return true;
-}, {
-  message: "Selected AI_PROVIDER requires its corresponding API key to be set",
 });
 
 let env: z.infer<typeof envSchema>;
