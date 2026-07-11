@@ -1,4 +1,4 @@
-import { crmSchema } from '../../../shared/crmSchema';
+import { crmSchema } from '../../shared/crmSchema';
 
 /**
  * Builds the prompt instruction for the Gemini API to map arbitrary CSV rows

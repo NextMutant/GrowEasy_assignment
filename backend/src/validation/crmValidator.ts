@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CRM_STATUS_VALUES, DATA_SOURCE_VALUES } from '../../../shared/enums';
+import { CRM_STATUS_VALUES, DATA_SOURCE_VALUES } from '../../shared/enums';
 
 /**
  * Zod validation schema for a normalized CRM record.

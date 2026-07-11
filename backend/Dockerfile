@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Copy package lock and package json
 COPY backend/package*.json ./backend/
-COPY shared/package*.json ./shared/ 2>/dev/null || :
+# COPY shared/package*.json ./shared/  # optional, removed for Docker compatibility
 
 # Install dependencies for backend
 WORKDIR /app/backend

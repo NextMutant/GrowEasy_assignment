@@ -1,4 +1,4 @@
-version: '3.8'
+
 
 services:
   backend:
@@ -7,11 +7,14 @@ services:
       dockerfile: backend/Dockerfile
     ports:
       - "3000:3000"
-    environment:
-      - PORT=3000
-      - CORS_ORIGIN=*
-      - AI_PROVIDER=local
+    env_file:
+      - ./backend/.env.production
     restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   frontend:
     build:
@@ -19,9 +22,24 @@ services:
       dockerfile: frontend/Dockerfile
     ports:
       - "3001:3001"
-    environment:
-      - PORT=3001
-      - NEXT_PUBLIC_API_URL=http://localhost:3000
+    env_file:
+      - ./frontend/.env.production
     depends_on:
       - backend
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - frontend
     restart: always

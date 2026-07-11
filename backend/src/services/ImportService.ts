@@ -1,7 +1,7 @@
 import { parseCsv } from '../csv/csvParser';
 import { mapBatchWithAI } from '../ai/AIService';
 import { crmRecordSchema } from '../validation/crmValidator';
-import { ImportResult, CrmRecord, SkippedRecord } from '../../../shared/types';
+import { ImportResult, CrmRecord, SkippedRecord } from '../../shared/types';
 import logger from '../utils/logger';
 
 const BATCH_SIZE = 20;

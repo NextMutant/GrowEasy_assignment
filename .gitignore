@@ -54,3 +54,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# TLS certificates (if added later)
+*.pem
+*.crt
+*.key

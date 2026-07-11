@@ -27,7 +27,7 @@ export const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 25 * 1024 * 1024, // 25MB limit
+    fileSize: 4.5 * 1024 * 1024, // 4.5MB limit (Vercel serverless body limit)
   },
 });
 

@@ -19,8 +19,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"],
-      "@shared/*": ["../shared/*"]
+      "@/*": ["./*"]
     }
   },
   "include": [
@@ -29,8 +28,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts",
-    "../shared/**/*"
+    "**/*.mts"
   ],
   "exclude": ["node_modules"]
 }
+

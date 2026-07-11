@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Copy package lock and package json
 COPY frontend/package*.json ./frontend/
-COPY shared/package*.json ./shared/ 2>/dev/null || :
+# COPY shared/package*.json ./shared/  # optional, removed for Docker compatibility
 
 # Install dependencies for frontend
 WORKDIR /app/frontend
