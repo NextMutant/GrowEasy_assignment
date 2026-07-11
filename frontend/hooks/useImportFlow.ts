@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { parseCsvOnClient, ClientParsedData } from '../lib/csvClientParser';
-import { uploadCsvFile } from '../lib/api';
+import { uploadCsvFile, mapCsvBatch } from '../lib/api';
 import { ImportResult } from '../lib/types';
 
 export type ImportFlowState = 'idle' | 'previewing' | 'processing' | 'done' | 'error';
@@ -51,7 +51,7 @@ export const useImportFlow = (options?: {
   };
 
   const handleConfirmImport = async () => {
-    if (!file) return;
+    if (!file || !clientData) return;
 
     setState('processing');
     setProgressStep('uploading');
@@ -60,24 +60,110 @@ export const useImportFlow = (options?: {
 
     abortControllerRef.current = new AbortController();
 
-    // Setup visual stepper progress animations to feel responsive and high premium
-    const t1 = setTimeout(() => setProgressStep('parsing'), 1500);
-    const t2 = setTimeout(() => setProgressStep('mapping_ai'), 3000);
-    const t3 = setTimeout(() => setProgressStep('finishing'), 8000);
-    
-    timerRefs.current = [t1, t2, t3];
+    const t1 = setTimeout(() => setProgressStep('parsing'), 800);
+    const t2 = setTimeout(() => setProgressStep('mapping_ai'), 1600);
+    timerRefs.current = [t1, t2];
+
+    const BATCH_SIZE = 15; // Process in safe sizes under 6000 TPM
+    const rawRows = clientData.rows;
+    const batches: Array<Array<Record<string, string>>> = [];
+    for (let i = 0; i < rawRows.length; i += BATCH_SIZE) {
+      batches.push(rawRows.slice(i, i + BATCH_SIZE));
+    }
+
+    const imported: any[] = [];
+    const skipped: any[] = [];
+
+    const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
     try {
-      const result = await uploadCsvFile(file, abortControllerRef.current.signal);
-      
-      // Let it stay in 'finishing' step briefly for a smooth transition
-      const tFinish = setTimeout(() => {
-        setImportResult(result);
-        setState('done');
-        options?.onSuccess?.(result);
-      }, 9500); // 1.5s after finishing starts
-      
-      timerRefs.current.push(tFinish);
+      // Allow visual steps to render
+      await delay(1700);
+
+      for (let i = 0; i < batches.length; i++) {
+        if (abortControllerRef.current?.signal.aborted) {
+          throw new DOMException('Aborted', 'AbortError');
+        }
+
+        const batch = batches[i];
+        let success = false;
+        let attempts = 0;
+        const maxAttempts = 3;
+
+        while (!success && attempts < maxAttempts) {
+          try {
+            loggerInfo(`Mapping batch ${i + 1}/${batches.length} (Attempt ${attempts + 1})...`);
+            // Update errorMsg with current mapping status to make it feel premium
+            setErrorMsg(`Processing batch ${i + 1}/${batches.length}...`);
+
+            const result = await mapCsvBatch(batch, i, abortControllerRef.current?.signal || undefined);
+            imported.push(...result.imported);
+            skipped.push(...result.skipped);
+            success = true;
+          } catch (err: any) {
+            if (err.name === 'AbortError') {
+              throw err;
+            }
+
+            attempts++;
+            if (err.status === 429 && attempts < maxAttempts) {
+              const waitTime = (err.retryAfterSeconds || 28) + 1;
+              loggerInfo(`Rate limit hit. Sleeping for ${waitTime}s...`);
+
+              // Display rate limit alert info
+              setErrorMsg(`Rate limit hit by Groq API. Pausing for ${waitTime} seconds before retrying batch ${i + 1}/${batches.length}...`);
+
+              for (let w = 0; w < waitTime; w++) {
+                if (abortControllerRef.current?.signal.aborted) {
+                  throw new DOMException('Aborted', 'AbortError');
+                }
+                await delay(1000);
+              }
+              setErrorMsg(null);
+            } else {
+              if (attempts >= maxAttempts) {
+                loggerInfo(`Batch ${i + 1} failed completely. Skipping.`);
+                const startRowNumber = i * BATCH_SIZE + 2;
+                batch.forEach((rawRow, idx) => {
+                  skipped.push({
+                    rowNumber: startRowNumber + idx,
+                    reason: err.message || 'Batch AI mapping failed',
+                    rawRowData: rawRow,
+                  });
+                });
+                success = true;
+              } else {
+                await delay(2000);
+              }
+            }
+          }
+        }
+      }
+
+      setErrorMsg(null);
+      setProgressStep('finishing');
+      await delay(1000);
+
+      const totalImported = imported.length;
+      const totalSkipped = skipped.length;
+      const totalProcessed = rawRows.length;
+      const successRate = totalProcessed > 0 ? Math.round((totalImported / totalProcessed) * 100) : 0;
+
+      skipped.sort((a, b) => a.rowNumber - b.rowNumber);
+
+      const finalResult: ImportResult = {
+        imported,
+        skipped,
+        totalImported,
+        totalSkipped,
+        totalProcessed,
+        successRate,
+      };
+
+      setImportResult(finalResult);
+      setState('done');
+      options?.onSuccess?.(finalResult);
+
     } catch (err) {
       const error = err as Error;
       if (error.name === 'AbortError') {

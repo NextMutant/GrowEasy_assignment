@@ -5,6 +5,7 @@ import requestLogger from './middleware/requestLogger';
 import errorHandler from './middleware/errorHandler';
 import healthRoute from './routes/health.route';
 import uploadRoute from './routes/upload.route';
+import mapBatchRoute from './routes/map-batch.route';
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(requestLogger);
 // Routes
 app.use('/health', healthRoute);
 app.use('/upload', uploadRoute);
+app.use('/map-batch', mapBatchRoute);
 
 // Global Error Handler
 app.use(errorHandler);

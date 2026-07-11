@@ -45,6 +45,55 @@ export const uploadCsvFile = async (
 };
 
 /**
+ * Maps a single batch of records via the /map-batch endpoint.
+ */
+export const mapCsvBatch = async (
+  batch: Array<Record<string, string>>,
+  batchIndex: number,
+  signal?: AbortSignal
+): Promise<{ imported: any[]; skipped: any[] }> => {
+  const response = await fetch(`${API_URL}/map-batch`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ batch, batchIndex }),
+    signal,
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    let errMsg = `Batch mapping failed with status: ${response.status}`;
+    try {
+      const errJson = JSON.parse(errText);
+      if (errJson.error?.message) {
+        errMsg = errJson.error.message;
+      }
+    } catch (_) {}
+
+    const error = new Error(errMsg);
+    if (response.status === 429) {
+      (error as any).status = 429;
+      const resetHeader = response.headers.get('retry-after') || response.headers.get('x-ratelimit-reset-tokens');
+      if (resetHeader) {
+        const match = resetHeader.match(/([\d.]+)/);
+        if (match) {
+          (error as any).retryAfterSeconds = Math.ceil(parseFloat(match[1]));
+        }
+      }
+    }
+    throw error;
+  }
+
+  const json = await response.json();
+  if (!json.success || !json.data) {
+    throw new Error(json.message || 'Server returned invalid response structure.');
+  }
+
+  return json.data;
+};
+
+/**
  * Checks backend health status.
  */
 export const checkHealth = async (): Promise<boolean> => {
